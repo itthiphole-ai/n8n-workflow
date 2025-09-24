@@ -1,0 +1,244 @@
+{
+  "name": "RSS-Feed",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "9d26c21e-0907-4c8b-8afc-c1e28f889344",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        720,
+        96
+      ],
+      "id": "ef8952a3-2766-403e-8649-266154b6a4ae",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Zvv8PJy_kZ2BLxDNzruy1OolqwD9HiK8gApGqIx0_yk/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Zvv8PJy_kZ2BLxDNzruy1OolqwD9HiK8gApGqIx0_yk/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "วันที่": "={{ $json.pubDate }}",
+            "หัวข้อ": "={{ $json.title }}",
+            "ลิงค์": "={{ $json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "วันที่",
+              "displayName": "วันที่",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "หัวข้อ",
+              "displayName": "หัวข้อ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ลิงค์",
+              "displayName": "ลิงค์",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        288
+      ],
+      "id": "fb1e7cb6-4384-4443-95d1-4e70090e9d13",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YtnkhYxDhmNHD4Pd",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://droidsans.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        160
+      ],
+      "id": "f89cf435-eb7c-4a29-8e89-fff168f0d8fe",
+      "name": "DroidSan-RSS"
+    },
+    {
+      "parameters": {
+        "url": "https://www.techtalkthai.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "c166ea5b-c5c9-4a7f-bb7d-e672aca61171",
+      "name": "TechTalk-RSSRead"
+    },
+    {
+      "parameters": {
+        "url": "https://www.srtet.co.th/rss/news",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        336
+      ],
+      "id": "4b8ffc13-c80b-4113-be16-63e8c31a7658",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "url": "https://www.nso.go.th/nsoweb/main/rssfeed/get_data/A",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        528
+      ],
+      "id": "094a332d-b4d0-4611-8152-7b14d33ead59",
+      "name": "RSS Read1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "TechTalk-RSSRead",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "DroidSan-RSS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DroidSan-RSS": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TechTalk-RSSRead": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7b9aadd-d309-453e-b39e-a5676ec74812",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a34230293ad57d95f64f922ecd47a6e2ec4cf05ed96d84862bf146e8e92cfb6"
+  },
+  "id": "LBDhpA6uqDFimYDJ",
+  "tags": []
+}
